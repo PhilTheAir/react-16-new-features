@@ -1,18 +1,48 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import Portals from './Portals';
+import Fragments from './Fragments';
+import ErrorBoundary from './ErrorBoundary';
 import './App.css';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showPortals: false
+    };
+  }
+
+  handleShow = () => {
+    this.setState({ showPortals: true });
+  }
+
+  handleHide = () => {
+    this.setState({ showPortals: false });
+  }
+
+  throwError = () => {
+    throw new Error('crashed!');
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div className="app">
+        This div has overflow: hidden.
+        <button onClick={this.handleShow}>Show Portals</button>
+        {
+          this.state.showPortals ? (
+            <ErrorBoundary>
+              <Portals>
+                <div className="modal">
+                  <Fragments />
+                  This is being rendered inside the #modal-container div.
+                  <button onClick={this.handleHide}>Hide Portals</button>
+                  <button onClick={this.throwError}>Throw Error</button>
+                </div>
+              </Portals>
+            </ErrorBoundary>
+          ) : null
+        }
       </div>
     );
   }
